@@ -65,7 +65,7 @@ StudentRouter.get("/verify/:hash", async (request, response) => {
         }
 
         student.verified = true;
-        await student.save();
+        await Student.save(student);
 
         const headers = { key: process.env.BACKEND_KEY };
         await axios.post(`${process.env.DISCORD_URL}/${serverId}/${studentId}`, {  }, { headers: headers });
@@ -89,8 +89,8 @@ StudentRouter.post("/", async (request, response) => {
             return;
         }
 
-        const { id, username, email, verified } = request.body;
-        await new Student(id, username, email, verified).save();
+        const student = request.body;
+        await Student.save(student);
         response.status(200).send("Success");
 
     } catch (error) {

@@ -71,8 +71,8 @@ TicketRouter.post("/", async (request, response) => {
             return;
         }
 
-        const { channelId, ownerId, reason, content, status } = request.body;
-        await new Ticket(channelId, ownerId, reason, content, status).save();
+        const ticket = request.body;
+        await Ticket.save(ticket);
         response.status(200).send("Success");
 
     } catch (error) {

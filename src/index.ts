@@ -19,4 +19,13 @@ Database.load().then(async () => {
     app.use("/tickets", TicketRouter);
     app.use("/menus", MenuRouter);
     app.listen(1560);
+
+    const students = await Database.students.find().toArray();
+    for (const student of students) {
+        if (!student.id) {
+            await Database.students.deleteOne({
+                _id: student._id
+            });
+        }
+    }
 });

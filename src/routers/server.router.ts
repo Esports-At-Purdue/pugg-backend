@@ -52,8 +52,8 @@ ServerRouter.post("/", async (request, response) => {
             return;
         }
 
-        const { id, name, settings } = request.body;
-        await new Server(id, name, settings).save();
+        const server = request.body;
+        await Server.save(server);
         response.status(200).send("Success");
 
     } catch (error) {

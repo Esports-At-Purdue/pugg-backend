@@ -72,8 +72,8 @@ MenuRouter.post("/", async (request, response) => {
             return;
         }
 
-        const { name, guildId, buttons } = request.body;
-        await new Menu(name, guildId, buttons).save();
+        const menu = request.body;
+        await Menu.save(menu);
         response.status(200).send("Success");
 
     } catch (error) {
