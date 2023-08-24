@@ -1,83 +1,33 @@
 import * as express from "express";
 import {Server} from "../server";
+import {Auth} from "../auth";
+import {Request, Response} from "express";
+import {NotFoundError} from "../error";
 
 export const ServerRouter = express.Router();
 
 ServerRouter.use(express.json());
 
-ServerRouter.get("/", async (request, response) => {
-    try {
+ServerRouter.get("/", Auth(async (request: Request, response: Response) => {
+    const servers = await Server.fetchAll();
+    response.status(200).send(servers);
+}));
 
-        const key = request?.header("key");
+ServerRouter.get("/:serverId", Auth(async (request: Request, response: Response) => {
+    const serverId = request?.params?.serverId;
+    const server = await Server.fetch(serverId);
+    response.status(200).send(server);
+}));
 
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
+ServerRouter.post("/", Auth(async (request: Request, response: Response) => {
+    const server = request.body;
+    await Server.save(server);
+    response.status(200).send("Success");
+}));
 
-        const servers = await Server.fetchAll();
-        response.status(200).send(servers);
-
-    } catch (error) {
-        response.status(500).send(error);
-    }
-});
-
-ServerRouter.get("/:serverId", async (request, response)=> {
-    try {
-
-        const key = request?.header("key");
-        const serverId = request?.params?.serverId;
-
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
-
-        const server = await Server.fetch(serverId);
-        response.status(200).send(server);
-
-    } catch (error) {
-        response.status(404).send(error);
-    }
-});
-
-ServerRouter.post("/", async (request, response) => {
-    try {
-
-        const key = request?.header("key");
-
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
-
-        const server = request.body;
-        await Server.save(server);
-        response.status(200).send("Success");
-
-    } catch (error) {
-        response.status(500).send(error);
-    }
-});
-
-ServerRouter.delete("/:serverId", async (request, response) => {
-    try {
-
-        const key = request?.header("key");
-        const serverId = request?.params?.serverId;
-
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
-
-        const { deletedCount } = await Server.delete(serverId);
-        if (deletedCount < 1) response.status(404).send({  });
-        else response.status(200).send("Success");
-
-
-    } catch (error) {
-        response.status(500).send(error);
-    }
-});
+ServerRouter.delete("/:serverId", Auth(async (request: Request, response: Response) => {
+    const serverId = request?.params?.serverId;
+    const { deletedCount } = await Server.delete(serverId);
+    if (deletedCount < 1) throw new NotFoundError(`Server Not Found\nId: ${serverId}`);
+    response.status(200).send("Success");
+}));
