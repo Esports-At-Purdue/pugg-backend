@@ -14,20 +14,8 @@ export const StudentRouter = express.Router();
 StudentRouter.use(express.json());
 
 StudentRouter.get("/", Auth(async (request: Request, response: Response) => {
-    try {
-        const key = request?.header("key");
-
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
-
-        const students = await Student.fetchAll();
-        response.status(200).send(students);
-
-    } catch (error) {
-        response.status(500).send(error);
-    }
+    const students = await Student.fetchAll();
+    response.status(200).send(students);
 }));
 
 StudentRouter.get("/:studentId", Auth(async (request: Request, response: Response) => {
@@ -76,9 +64,8 @@ StudentRouter.post("/", Auth(async (request: Request, response: Response) => {
 
 StudentRouter.delete("/:studentId", Auth(async (request: Request, response: Response) => {
     const studentId = request?.params?.studentId;
-    const { deletedCount } = await Student.delete(studentId);
-    if (deletedCount < 1) throw new NotFoundError(`Student Not Found\nId: ${studentId}`);
-    else response.status(200).send("Success");
+    await Student.delete(studentId);
+    response.status(200).send("Success");
 }));
 
 function processRequest(hashString: string) {

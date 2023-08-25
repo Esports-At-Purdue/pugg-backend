@@ -27,7 +27,6 @@ ServerRouter.post("/", Auth(async (request: Request, response: Response) => {
 
 ServerRouter.delete("/:serverId", Auth(async (request: Request, response: Response) => {
     const serverId = request?.params?.serverId;
-    const { deletedCount } = await Server.delete(serverId);
-    if (deletedCount < 1) throw new NotFoundError(`Server Not Found\nId: ${serverId}`);
+    await Server.delete(serverId);
     response.status(200).send("Success");
 }));

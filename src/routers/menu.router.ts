@@ -26,28 +26,14 @@ MenuRouter.get("/:guildId", Auth(async (request: Request, response: Response) =>
 }));
 
 MenuRouter.post("/", Auth(async (request: Request, response: Response) => {
-    try {
-
-        const key = request?.header("key");
-
-        if (!process.env.MONGO_KEY || key != process.env.MONGO_KEY) {
-            response.status(403).send("Invalid Key");
-            return;
-        }
-
-        const menu = request.body;
-        await Menu.save(menu);
-        response.status(200).send("Success");
-
-    } catch (error) {
-        console.log(error);
-        response.status(500).send(error);
-    }
+    const menu = request.body;
+    await Menu.save(menu);
+    response.status(200).send("Success");
 }));
 
 MenuRouter.delete("/:guildId/:menuName", Auth(async (request: Request, response: Response) => {
     const guildId = request?.params?.guildId;
-    const menuName = request?.params?.menuName;const { deletedCount } = await Menu.delete(menuName, guildId);
-    if (deletedCount < 1) response.status(404).send({  });
-    else response.status(200).send("Success");
+    const menuName = request?.params?.menuName;
+    await Menu.delete(menuName, guildId);
+    response.status(200).send("Success");
 }));

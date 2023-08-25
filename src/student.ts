@@ -25,6 +25,7 @@ export class Student {
 
     public static async delete(id: string) {
         const query: Filter<any> = { id: id };
-        return await Database.students.deleteOne(query);
+        const { deletedCount } = await Database.students.deleteOne(query);
+        if (deletedCount < 1) throw new NotFoundError(`Student Not Found\nStudentId: ${id}`);
     }
 }

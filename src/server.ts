@@ -25,6 +25,7 @@ export class Server {
 
     public static async delete(id: string) {
         const query: Filter<any> = { id: id };
-        return await Database.servers.deleteOne(query);
+        const { deletedCount } = await Database.servers.deleteOne(query);
+        if (deletedCount < 1) throw new NotFoundError(`Server Not Found\nId: ${id}`);
     }
 }

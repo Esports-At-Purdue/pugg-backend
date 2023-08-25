@@ -30,6 +30,7 @@ export class Ticket {
 
     public static async delete(channelId: string) {
         const query: Filter<any> = { channelId: channelId };
-        return await Database.tickets.deleteOne(query);
+        const { deletedCount } = await Database.tickets.deleteOne(query);
+        if (deletedCount < 1) throw new NotFoundError(`Ticket Not Found\nChannelId: ${channelId}`);
     }
 }

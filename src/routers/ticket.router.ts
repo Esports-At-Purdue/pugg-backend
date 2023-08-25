@@ -33,7 +33,6 @@ TicketRouter.post("/", Auth(async (request: Request, response: Response) => {
 
 TicketRouter.delete("/:ticketId", Auth(async (request: Request, response: Response) => {
     const ticketId = request?.params?.ticketId;
-    const { deletedCount } = await Ticket.delete(ticketId);
-    if (deletedCount < 1) throw new NotFoundError(`Ticket Not Found\nId: ${ticketId}`);
-    else response.status(200).send("Success");
+    await Ticket.delete(ticketId);
+    response.status(200).send("Success");
 }));

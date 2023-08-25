@@ -30,6 +30,7 @@ export class Menu {
 
     public static async delete(name: string, guildId: string) {
         const query: Filter<any> = { name: name, guildId: guildId };
-        return await Database.menus.deleteOne(query);
+        const { deletedCount } = await Database.menus.deleteOne(query);
+        if (deletedCount < 1) throw new NotFoundError(`Menu Not Found\nName: ${name}\nGuildId${guildId}`);
     }
 }
