@@ -3,6 +3,7 @@ import { Collection, MongoClient } from "mongodb";
 export class Database {
     public static servers: Collection;
     public static students: Collection;
+    public static players: Collection;
     public static tickets: Collection;
     public static menus: Collection;
 
@@ -12,6 +13,7 @@ export class Database {
         const database = client.db("Purdue");
         Database.servers = database.collection("servers");
         Database.students = database.collection("students-new");
+        Database.players = database.collection("players-new");
         Database.tickets = database.collection("tickets-new");
         Database.menus = database.collection("menus");
     }
