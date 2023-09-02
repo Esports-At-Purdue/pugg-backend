@@ -8,6 +8,8 @@ import {ServerRouter} from "./routers/server.router";
 import {EmailRouter} from "./routers/email.router";
 import {SheetsRouter} from "./routers/sheets.router";
 import {PlayerRouter} from "./routers/player.router";
+import {TeamRouter} from "./routers/team.router";
+import {GameRouter} from "./routers/game.router";
 
 dotenv.config({ path: `${__dirname}/.env.${process.env.NODE_ENV}` });
 
@@ -18,6 +20,8 @@ Database.load().then(async () => {
     app.use("/servers", ServerRouter);
     app.use("/students", StudentRouter);
     app.use("/players", PlayerRouter);
+    app.use("/teams", TeamRouter);
+    app.use("/games", GameRouter);
     app.use("/tickets", TicketRouter);
     app.use("/menus", MenuRouter);
     app.listen(1560);
