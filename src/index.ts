@@ -10,11 +10,13 @@ import {SheetsRouter} from "./routers/sheets.router";
 import {PlayerRouter} from "./routers/player.router";
 import {TeamRouter} from "./routers/team.router";
 import {GameRouter} from "./routers/game.router";
+import {GgwpRouter} from "./routers/ggwp.router";
 
 dotenv.config({ path: `${__dirname}/.env.${process.env.NODE_ENV}` });
 
 Database.load().then(async () => {
     const app = express();
+    app.use("/ggwp", GgwpRouter);
     app.use("/sheets", SheetsRouter);
     app.use("/email", EmailRouter);
     app.use("/servers", ServerRouter);
@@ -25,13 +27,4 @@ Database.load().then(async () => {
     app.use("/tickets", TicketRouter);
     app.use("/menus", MenuRouter);
     app.listen(1560);
-
-    const students = await Database.students.find().toArray();
-    for (const student of students) {
-        if (!student.id) {
-            await Database.students.deleteOne({
-                _id: student._id
-            });
-        }
-    }
 });

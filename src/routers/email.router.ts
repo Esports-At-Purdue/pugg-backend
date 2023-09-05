@@ -7,7 +7,7 @@ export const EmailRouter = express.Router();
 EmailRouter.use(express.json());
 
 EmailRouter.post("/", Auth(async (request: Request, response: Response) => {
-    const {address, link} = request?.body;
+    const { address, link } = request?.body;
 
     const transporter = mailer.createTransport({
         service: "gmail",
