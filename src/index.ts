@@ -16,7 +16,6 @@ dotenv.config({ path: `${__dirname}/.env.${process.env.NODE_ENV}` });
 
 Database.load().then(async () => {
     const app = express();
-    app.use("/ggwp", GgwpRouter);
     app.use("/sheets", SheetsRouter);
     app.use("/email", EmailRouter);
     app.use("/servers", ServerRouter);
