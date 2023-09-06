@@ -10,7 +10,6 @@ import {SheetsRouter} from "./routers/sheets.router";
 import {PlayerRouter} from "./routers/player.router";
 import {TeamRouter} from "./routers/team.router";
 import {GameRouter} from "./routers/game.router";
-import {GgwpRouter} from "./routers/ggwp.router";
 
 dotenv.config({ path: `${__dirname}/.env.${process.env.NODE_ENV}` });
 
